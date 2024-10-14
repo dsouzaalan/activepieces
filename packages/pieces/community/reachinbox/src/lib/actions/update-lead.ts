@@ -3,6 +3,7 @@ import { fetchCampaigns, reachinboxCommon } from '../common/index';
 import { ReachinboxAuth } from '../..';
 import { HttpMethod, httpClient } from '@activepieces/pieces-common';
 
+<<<<<<< HEAD
 // Define the structure for custom variables
 interface CustomVariable {
   key: string;
@@ -10,6 +11,8 @@ interface CustomVariable {
 }
 
 // Define the updateLead action
+=======
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
 export const updateLead = createAction({
   auth: ReachinboxAuth,
   name: 'updateLead',
@@ -24,6 +27,10 @@ export const updateLead = createAction({
       refreshers: ['auth'],
       options: async ({ auth }) => {
         const campaigns = await fetchCampaigns(auth as string);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
         return {
           options: campaigns.map((campaign) => ({
             label: campaign.name,
@@ -58,9 +65,14 @@ export const updateLead = createAction({
         const leads = Array.isArray(response.body.data.leads)
           ? response.body.data.leads
           : [];
+<<<<<<< HEAD
 
         return {
           options: leads.map((lead: { email: string; id: string }) => ({
+=======
+        return {
+          options: leads.map((lead: { email: any; id: any }) => ({
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
             label: lead.email,
             value: lead.id,
           })),
@@ -83,6 +95,7 @@ export const updateLead = createAction({
       description: 'Enter the new last name for the lead.',
       required: false,
     }),
+<<<<<<< HEAD
     customVariables: Property.Array({
       displayName: 'Custom Variables',
       description: 'Add custom variables as key-value pairs for the lead.',
@@ -104,12 +117,18 @@ export const updateLead = createAction({
   },
   async run(context) {
     const { campaignId, leadId, email, firstName, lastName, customVariables } =
+=======
+  },
+  async run(context) {
+    const { campaignId, leadId, email, firstName, lastName } =
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
       context.propsValue;
 
     if (!campaignId || !leadId) {
       throw new Error('Campaign ID and Lead ID are required.');
     }
 
+<<<<<<< HEAD
     // Safely cast customVariables to CustomVariable[], default to an empty array if undefined
     const customVariablesArray: CustomVariable[] = (customVariables ||
       []) as CustomVariable[];
@@ -121,6 +140,8 @@ export const updateLead = createAction({
     });
 
     // Include the custom variables in the lead update request
+=======
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
     const url = `${reachinboxCommon.baseUrl}leads/update`;
 
     try {
@@ -138,7 +159,10 @@ export const updateLead = createAction({
           attributes: {
             firstName: firstName || '',
             lastName: lastName || '',
+<<<<<<< HEAD
             ...customVariablesObject, // Add custom variables dynamically
+=======
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
           },
         },
       });

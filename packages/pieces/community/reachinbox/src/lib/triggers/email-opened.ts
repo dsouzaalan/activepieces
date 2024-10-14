@@ -32,6 +32,7 @@ export const emailOpened = createTrigger({
     }),
   },
   sampleData: {
+<<<<<<< HEAD
     email_id: 1,
     lead_id: 1,
     lead_email: 'recipient@example.com',
@@ -47,6 +48,13 @@ export const emailOpened = createTrigger({
     lead_last_name: 'Lead Last Name',
     email_sent_body: 'Sent Email body',
     email_replied_body: 'Sent Replied body',
+=======
+    email_id: 3,
+    lead_id: 1,
+    lead_email: 'recipient@example.com',
+    event: 'EMAIL_OPENED',
+    timestamp: '2024-03-18T08:15:51.000Z',
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
   },
   type: TriggerStrategy.WEBHOOK,
   async onEnable(context) {

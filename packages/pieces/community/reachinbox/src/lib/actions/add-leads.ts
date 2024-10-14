@@ -1,4 +1,5 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
+<<<<<<< HEAD
 import {
   fetchCampaigns,
   addLeadsToCampaign,
@@ -12,13 +13,21 @@ interface CustomVariable {
   key: string;
   value: string;
 }
+=======
+import { fetchCampaigns, addLeadsToCampaign } from '../common/index';
+import { ReachinboxAuth } from '../..';
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
 
 export const addLeads = createAction({
   auth: ReachinboxAuth,
   name: 'addLeads',
   displayName: 'Add Leads',
   description:
+<<<<<<< HEAD
     'Add leads to campaigns dynamically by selecting a campaign, entering lead details, and including custom variables.',
+=======
+    'Add leads to campaigns dynamically by selecting a campaign and entering lead details.',
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
   props: {
     campaignId: Property.Dropdown({
       displayName: 'Select Campaign',
@@ -52,6 +61,7 @@ export const addLeads = createAction({
       description: 'Enter the last name for the lead',
       required: false,
     }),
+<<<<<<< HEAD
     customVariables: Property.Array({
       displayName: 'Custom Variables',
       description: 'Add custom variables as key-value pairs for the lead.',
@@ -118,6 +128,28 @@ export const addLeads = createAction({
     } catch (error) {
       console.error('Error adding leads:', error);
       throw new Error('Failed to add leads to the campaign.');
+=======
+  },
+  async run(context) {
+    const { campaignId, email, firstName, lastName } = context.propsValue;
+    const body = {
+      campaignId,
+      leads: [{ email, firstName, lastName }],
+      newCoreVariables: ['firstName'],
+      duplicates: [],
+    };
+
+    const response = await addLeadsToCampaign(context.auth, body);
+
+    if (response.success) {
+      return {
+        success: true,
+        message: response.message,
+        leadCount: response.leadCount,
+      };
+    } else {
+      throw new Error(`Failed to add leads: ${response.message}`);
+>>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
     }
   },
 });
