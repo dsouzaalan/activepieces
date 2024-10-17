@@ -3,6 +3,13 @@ import { fetchCampaigns, reachinboxCommon } from '../common/index';
 import { ReachinboxAuth } from '../..';
 import { HttpMethod, httpClient } from '@activepieces/pieces-common';
 
+// Define the structure for custom variables
+interface CustomVariable {
+  key: string;
+  value: string;
+}
+
+// Define the updateLead action
 export const updateLead = createAction({
   auth: ReachinboxAuth,
   name: 'updateLead',
@@ -17,7 +24,6 @@ export const updateLead = createAction({
       refreshers: ['auth'],
       options: async ({ auth }) => {
         const campaigns = await fetchCampaigns(auth as string);
-
         return {
           options: campaigns.map((campaign) => ({
             label: campaign.name,
@@ -52,8 +58,9 @@ export const updateLead = createAction({
         const leads = Array.isArray(response.body.data.leads)
           ? response.body.data.leads
           : [];
+
         return {
-          options: leads.map((lead: { email: any; id: any }) => ({
+          options: leads.map((lead: { email: string; id: string }) => ({
             label: lead.email,
             value: lead.id,
           })),
@@ -76,15 +83,44 @@ export const updateLead = createAction({
       description: 'Enter the new last name for the lead.',
       required: false,
     }),
+    customVariables: Property.Array({
+      displayName: 'Custom Variables',
+      description: 'Add custom variables as key-value pairs for the lead.',
+      properties: {
+        key: Property.ShortText({
+          displayName: 'Key',
+          description: 'Enter the key for the custom variable',
+          required: true,
+        }),
+        value: Property.ShortText({
+          displayName: 'Value',
+          description: 'Enter the value for the custom variable',
+          required: true,
+        }),
+      },
+      required: false,
+      defaultValue: [],
+    }),
   },
   async run(context) {
-    const { campaignId, leadId, email, firstName, lastName } =
+    const { campaignId, leadId, email, firstName, lastName, customVariables } =
       context.propsValue;
 
     if (!campaignId || !leadId) {
       throw new Error('Campaign ID and Lead ID are required.');
     }
 
+    // Safely cast customVariables to CustomVariable[], default to an empty array if undefined
+    const customVariablesArray: CustomVariable[] = (customVariables ||
+      []) as CustomVariable[];
+
+    // Process the custom variables into a key-value object for the lead attributes
+    const customVariablesObject: Record<string, string> = {};
+    customVariablesArray.forEach((variable: CustomVariable) => {
+      customVariablesObject[variable.key] = variable.value;
+    });
+
+    // Include the custom variables in the lead update request
     const url = `${reachinboxCommon.baseUrl}leads/update`;
 
     try {
@@ -102,6 +138,7 @@ export const updateLead = createAction({
           attributes: {
             firstName: firstName || '',
             lastName: lastName || '',
+            ...customVariablesObject, // Add custom variables dynamically
           },
         },
       });
