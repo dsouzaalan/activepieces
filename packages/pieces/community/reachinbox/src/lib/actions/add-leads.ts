@@ -1,14 +1,24 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { fetchCampaigns, addLeadsToCampaign } from '../common/index';
-import { ReachinboxAuth } from '../..';
+import {
+  fetchCampaigns,
+  addLeadsToCampaign,
+  reachinboxCommon,
+} from '../common/index';
+import { reachinbox, ReachinboxAuth } from '../..';
 import { HttpMethod, httpClient } from '@activepieces/pieces-common';
+
+// Define the structure for custom variables
+interface CustomVariable {
+  key: string;
+  value: string;
+}
 
 export const addLeads = createAction({
   auth: ReachinboxAuth,
   name: 'addLeads',
   displayName: 'Add Leads',
   description:
-    'Add leads to campaigns dynamically by selecting a campaign and entering lead details.',
+    'Add leads to campaigns dynamically by selecting a campaign, entering lead details, and including custom variables.',
   props: {
     campaignId: Property.Dropdown({
       displayName: 'Select Campaign',
@@ -42,20 +52,53 @@ export const addLeads = createAction({
       description: 'Enter the last name for the lead',
       required: false,
     }),
+    customVariables: Property.Array({
+      displayName: 'Custom Variables',
+      description: 'Add custom variables as key-value pairs for the lead.',
+      properties: {
+        key: Property.ShortText({
+          displayName: 'Key',
+          description: 'Enter the key for the custom variable',
+          required: true,
+        }),
+        value: Property.ShortText({
+          displayName: 'Value',
+          description: 'Enter the value for the custom variable',
+          required: true,
+        }),
+      },
+      required: false,
+      defaultValue: [],
+    }),
   },
   async run(context) {
     const { campaignId, email, firstName, lastName } = context.propsValue;
+
+    // Safely cast customVariables to CustomVariable[], default to an empty array if undefined
+    const customVariables: CustomVariable[] = (context.propsValue
+      .customVariables || []) as CustomVariable[];
+
+    // Process the custom variables into a key-value object for each lead
+    const customVariablesObject: Record<string, string> = {};
+    customVariables.forEach((variable: CustomVariable) => {
+      customVariablesObject[variable.key] = variable.value;
+    });
+
+    // Include the custom variables in the lead data
     const body = {
       campaignId,
-      leads: [{ email, firstName, lastName }],
-      newCoreVariables: ['firstName'],
+      leads: [{ email, firstName, lastName, ...customVariablesObject }],
+      newCoreVariables: [
+        'firstName',
+        ...customVariables.map((varObj: CustomVariable) => varObj.key),
+      ],
       duplicates: [],
     };
 
     try {
       const response = await httpClient.sendRequest({
         method: HttpMethod.POST,
-        url: 'https://api.reachinbox.ai/api/v1/leads/add',
+        url: `${reachinboxCommon.baseUrl}leads/add`,
         headers: {
           Authorization: `Bearer ${context.auth}`,
           'Content-Type': 'application/json',
