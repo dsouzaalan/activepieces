@@ -16,7 +16,11 @@ interface CustomVariable {
 =======
 import { fetchCampaigns, addLeadsToCampaign } from '../common/index';
 import { ReachinboxAuth } from '../..';
+<<<<<<< HEAD
 >>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
+=======
+import { HttpMethod, httpClient } from '@activepieces/pieces-common';
+>>>>>>> c8ced107b (fix: tested and resolved associated issues)
 
 export const addLeads = createAction({
   auth: ReachinboxAuth,
@@ -139,8 +143,18 @@ export const addLeads = createAction({
       duplicates: [],
     };
 
-    const response = await addLeadsToCampaign(context.auth, body);
+    try {
+      const response = await httpClient.sendRequest({
+        method: HttpMethod.POST,
+        url: 'https://api.reachinbox.ai/api/v1/leads/add',
+        headers: {
+          Authorization: `Bearer ${context.auth}`,
+          'Content-Type': 'application/json',
+        },
+        body,
+      });
 
+<<<<<<< HEAD
     if (response.success) {
       return {
         success: true,
@@ -150,6 +164,20 @@ export const addLeads = createAction({
     } else {
       throw new Error(`Failed to add leads: ${response.message}`);
 >>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
+=======
+      if (response.status === 200) {
+        return {
+          success: true,
+          message: response.body.message || 'Leads added successfully.',
+          leadCount: response.body.leadCount,
+        };
+      } else {
+        throw new Error(`Failed to add leads: ${response.body.message}`);
+      }
+    } catch (error) {
+      console.error('Error adding leads:', error);
+      throw new Error('Failed to add leads to the campaign.');
+>>>>>>> c8ced107b (fix: tested and resolved associated issues)
     }
   },
 });
