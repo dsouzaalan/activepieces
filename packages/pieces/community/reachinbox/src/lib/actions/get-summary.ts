@@ -39,15 +39,15 @@ export const getSummary = createAction({
     }),
     endDate: Property.ShortText({
       displayName: 'End Date',
-      description: 'Enter the end date (YYYY-MM-DD). E.g. 2023-10-20',
+      description: 'Enter the end date (YYYY-MM-DD). E.g. 2023-12-20',
       required: true,
     }),
   },
   async run(context) {
     const { startDate, endDate } = context.propsValue;
 
-    // Build the URL with the required start and end dates
-    const url = `${reachinboxCommon.baseUrl}campaign/total-analytics?startDate=${startDate}&endDate=${endDate}`;
+    // Build the URL with the startDate and endDate query parameters
+    const url = `https://api.reachinbox.ai/api/v1/analytics/summary?startDate=${startDate}&endDate=${endDate}`;
 
     try {
       const response = await httpClient.sendRequest<SummaryAnalyticsResponse>({

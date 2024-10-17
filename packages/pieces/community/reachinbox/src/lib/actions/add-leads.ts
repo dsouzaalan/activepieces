@@ -1,6 +1,7 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { fetchCampaigns, addLeadsToCampaign } from '../common/index';
 import { ReachinboxAuth } from '../..';
+import { HttpMethod, httpClient } from '@activepieces/pieces-common';
 
 export const addLeads = createAction({
   auth: ReachinboxAuth,
@@ -51,16 +52,29 @@ export const addLeads = createAction({
       duplicates: [],
     };
 
-    const response = await addLeadsToCampaign(context.auth, body);
+    try {
+      const response = await httpClient.sendRequest({
+        method: HttpMethod.POST,
+        url: 'https://api.reachinbox.ai/api/v1/leads/add',
+        headers: {
+          Authorization: `Bearer ${context.auth}`,
+          'Content-Type': 'application/json',
+        },
+        body,
+      });
 
-    if (response.success) {
-      return {
-        success: true,
-        message: response.message,
-        leadCount: response.leadCount,
-      };
-    } else {
-      throw new Error(`Failed to add leads: ${response.message}`);
+      if (response.status === 200) {
+        return {
+          success: true,
+          message: response.body.message || 'Leads added successfully.',
+          leadCount: response.body.leadCount,
+        };
+      } else {
+        throw new Error(`Failed to add leads: ${response.body.message}`);
+      }
+    } catch (error) {
+      console.error('Error adding leads:', error);
+      throw new Error('Failed to add leads to the campaign.');
     }
   },
 });
