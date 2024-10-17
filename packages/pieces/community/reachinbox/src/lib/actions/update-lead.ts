@@ -4,6 +4,9 @@ import { ReachinboxAuth } from '../..';
 import { HttpMethod, httpClient } from '@activepieces/pieces-common';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
 // Define the structure for custom variables
 interface CustomVariable {
   key: string;
@@ -11,8 +14,11 @@ interface CustomVariable {
 }
 
 // Define the updateLead action
+<<<<<<< HEAD
 =======
 >>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
+=======
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
 export const updateLead = createAction({
   auth: ReachinboxAuth,
   name: 'updateLead',
@@ -28,9 +34,12 @@ export const updateLead = createAction({
       options: async ({ auth }) => {
         const campaigns = await fetchCampaigns(auth as string);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
+=======
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
         return {
           options: campaigns.map((campaign) => ({
             label: campaign.name,
@@ -66,6 +75,7 @@ export const updateLead = createAction({
           ? response.body.data.leads
           : [];
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         return {
           options: leads.map((lead: { email: string; id: string }) => ({
@@ -73,6 +83,11 @@ export const updateLead = createAction({
         return {
           options: leads.map((lead: { email: any; id: any }) => ({
 >>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
+=======
+
+        return {
+          options: leads.map((lead: { email: string; id: string }) => ({
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
             label: lead.email,
             value: lead.id,
           })),
@@ -96,6 +111,9 @@ export const updateLead = createAction({
       required: false,
     }),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
     customVariables: Property.Array({
       displayName: 'Custom Variables',
       description: 'Add custom variables as key-value pairs for the lead.',
@@ -114,6 +132,7 @@ export const updateLead = createAction({
       required: false,
       defaultValue: [],
     }),
+<<<<<<< HEAD
   },
   async run(context) {
     const { campaignId, leadId, email, firstName, lastName, customVariables } =
@@ -122,6 +141,11 @@ export const updateLead = createAction({
   async run(context) {
     const { campaignId, leadId, email, firstName, lastName } =
 >>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
+=======
+  },
+  async run(context) {
+    const { campaignId, leadId, email, firstName, lastName, customVariables } =
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
       context.propsValue;
 
     if (!campaignId || !leadId) {
@@ -129,6 +153,9 @@ export const updateLead = createAction({
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
     // Safely cast customVariables to CustomVariable[], default to an empty array if undefined
     const customVariablesArray: CustomVariable[] = (customVariables ||
       []) as CustomVariable[];
@@ -140,8 +167,11 @@ export const updateLead = createAction({
     });
 
     // Include the custom variables in the lead update request
+<<<<<<< HEAD
 =======
 >>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
+=======
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
     const url = `${reachinboxCommon.baseUrl}leads/update`;
 
     try {
@@ -160,9 +190,13 @@ export const updateLead = createAction({
             firstName: firstName || '',
             lastName: lastName || '',
 <<<<<<< HEAD
+<<<<<<< HEAD
             ...customVariablesObject, // Add custom variables dynamically
 =======
 >>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
+=======
+            ...customVariablesObject, // Add custom variables dynamically
+>>>>>>> ddececdb4 (fix: included custom variables fields for update leads)
           },
         },
       });
