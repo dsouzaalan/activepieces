@@ -19,10 +19,6 @@ import { removeEmail } from './lib/actions/remove-email';
 import { setSchedule } from './lib/actions/set-schedule';
 import { startCampaign } from './lib/actions/start-campaign';
 import { updateLead } from './lib/actions/update-lead';
-<<<<<<< HEAD
-import { PieceCategory } from '@activepieces/shared';
-=======
->>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
 
 /**
  * Define the API Key authentication using PieceAuth.SecretText
@@ -52,12 +48,7 @@ export const reachinbox = createPiece({
   auth: ReachinboxAuth,
   minimumSupportedRelease: '0.20.0',
   logoUrl: 'https://cdn.activepieces.com/pieces/reachinbox.png',
-<<<<<<< HEAD
-  categories: [PieceCategory.MARKETING],
-  authors: ['support@reachinbox.ai', 'ManojKumard', 'Mitrajit'],
-=======
   authors: [],
->>>>>>> 061f7bf26 (feat: integrate with ReachInbox service)
   actions: [
     addLeads,
     addBlocklist,
